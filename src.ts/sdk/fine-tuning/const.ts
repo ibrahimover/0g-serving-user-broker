@@ -41,6 +41,14 @@ export const MODEL_HASH_MAP: {
             '0x3317127671a3217583069001b2a00454ef4d1e838f8f1f4ffbe64db0ec7ed960',
         type: 'text',
     },
+    'Qwen2.5-0.5B-Instruct': {
+        turbo: '0xb4f76a886b8655c92bb021922d60b5e4d9271a5c9da98b6cb10937a06c2c75a7',
+        standard: '',
+        description:
+            'Qwen2.5-0.5B-Instruct is a compact instruction-tuned language model optimized for LoRA fine-tuning. More details at: https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct',
+        tokenizer: 'Qwen/Qwen2.5-0.5B-Instruct',
+        type: 'text',
+    },
     // mobilenet_v2: {
     //     turbo: '0x8645816c17a8a70ebf32bcc7e621c659e8d0150b1a6bfca27f48f83010c6d12e',
     //     standard: '',

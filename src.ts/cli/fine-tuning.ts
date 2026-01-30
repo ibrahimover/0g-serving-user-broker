@@ -13,19 +13,29 @@ import { TOKEN_COUNTER_MERKLE_ROOT } from '../sdk/fine-tuning/const'
 export default function fineTuning(program: Command) {
     program
         .command('verify')
-        .description('verify TEE remote attestation of service')
+        .description('Verify the reliability and TEE attestation of a fine-tuning service')
         .requiredOption('--provider <address>', 'Provider address')
+        .option(
+            '--output-dir <path>',
+            'Output directory for verification reports',
+            '.'
+        )
         .option('--rpc <url>', '0G Chain RPC endpoint')
         .option('--ledger-ca <address>', 'Account (ledger) contract address')
         .option('--fine-tuning-ca <address>', 'Fine Tuning contract address')
-        .option('--gas-price <price>', 'Gas price for transactions')
         .action((options) => {
             withFineTuningBroker(options, async (broker) => {
-                await broker.fineTuning!.acknowledgeProviderSigner(
+                const result = await broker.fineTuning!.verifyService(
                     options.provider,
-                    options.gasPrice
+                    options.outputDir
                 )
-                console.log('Provider verified')
+                if (result) {
+                    if (!result.success) {
+                        console.log('❌ Service verification failed')
+                    }
+                } else {
+                    console.log('Verification result is null')
+                }
             })
         })
 

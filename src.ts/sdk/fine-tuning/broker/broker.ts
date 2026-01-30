@@ -7,6 +7,8 @@ import type { LedgerBroker } from '../../ledger'
 import { Provider } from '../provider/provider'
 import type { Task } from '../provider/provider'
 import { throwFormattedError } from '../../common/utils'
+import { Verifier } from './verifier'
+import type { VerificationResult } from './verifier'
 
 export class FineTuningBroker {
     private signer: Wallet
@@ -14,6 +16,7 @@ export class FineTuningBroker {
     private ledger!: LedgerBroker
     private modelProcessor!: ModelProcessor
     private serviceProcessor!: ServiceProcessor
+    private verifier!: Verifier
     private serviceProvider!: Provider
     private _gasPrice?: number
     private _maxGasPrice?: number
@@ -59,6 +62,11 @@ export class FineTuningBroker {
             this.serviceProvider
         )
         this.serviceProcessor = new ServiceProcessor(
+            contract,
+            this.ledger,
+            this.serviceProvider
+        )
+        this.verifier = new Verifier(
             contract,
             this.ledger,
             this.serviceProvider
@@ -321,6 +329,20 @@ export class FineTuningBroker {
                 taskId,
                 encryptedModelPath,
                 decryptedModelPath
+            )
+        } catch (error) {
+            throwFormattedError(error)
+        }
+    }
+
+    public verifyService = async (
+        providerAddress: string,
+        outputDir: string = '.'
+    ): Promise<VerificationResult> => {
+        try {
+            return await this.verifier.verifyService(
+                providerAddress,
+                outputDir
             )
         } catch (error) {
             throwFormattedError(error)
